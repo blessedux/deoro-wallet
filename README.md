@@ -1,22 +1,8 @@
-<<<<<<< HEAD
-# Deoro Wallet
-
-Apple Wallet fidelity card for Deoro (coffee shop).
-
-This `main` branch only receives merged ticket PRs.
-
-- One branch per Exponential ticket (`deoro-N-…`)
-- Branch from latest `main`
-- Merge before starting a ticket that depends on it
-- Never commit Pass Type ID certs or private keys
-
-Product: https://www.exponential.im/w/personal-cmgwt550/products/deoro
-=======
 # Deoro Apple Wallet fidelity card
 
-Greenfield PassKit source for Deoro. Tracked in Exponential product `deoro` (Mente Maestra Studio).
+PassKit source for Deoro. Tracked in Exponential product `deoro` (Mente Maestra Studio).
 
-Ticket 1 is the source of truth: `pass/Deoro Loyalty.pass/` plus a browser preview of that same `pass.json`. Later tickets wrap these files. They do not invent a second card UI.
+`pass/Deoro Loyalty.pass/` is the source of truth. The browser preview is that same `pass.json`. The counter reads the QR serial from that pass. Later signing wraps these files — it does not invent a second card UI.
 
 ## Demo without an Apple Developer account
 
@@ -26,9 +12,13 @@ python3 scripts/check-pass-source.py
 python3 -m http.server 4173
 ```
 
-Open http://localhost:4173/preview/
+1. Open the card: http://localhost:4173/preview/
+2. Open the counter: http://localhost:4173/counter/
+3. **Happy path:** hold the preview QR up to the counter camera, or paste `DEORO-10001`.
 
-The preview fetches `pass/Deoro Loyalty.pass/pass.json` and draws the Wallet face (front + flip-side back fields). The QR payload is the member serial (`DEORO-10001`). Change stamps or the member name in `pass.json`, then refresh.
+The preview fetches `pass/Deoro Loyalty.pass/pass.json` and draws the Wallet face (front + flip-side back fields). The QR payload is the member serial (`DEORO-10001`). The counter looks up that serial against the same `pass.json` and shows name + stamps — or a clear miss for an unknown serial.
+
+Change stamps or the member name in `pass.json`, then refresh both pages.
 
 This is not a signed `.pkpass`. Wallet on a phone will refuse it until ticket 5 wires certificates. Do not commit Pass Type ID certs or private keys.
 
@@ -66,4 +56,4 @@ Repo: [blessedux/deoro-wallet](https://github.com/blessedux/deoro-wallet)
 - Product: [Deoro](https://www.exponential.im/w/personal-cmgwt550/products/deoro)
 - Feature: Apple Wallet Fidelity Card (`cmtq5xa1y0003ld04dqo5q57s`)
 - Ticket 1: [Render the Deoro Wallet face from pass source](https://www.exponential.im/w/personal-cmgwt550/products/deoro/tickets/1)
->>>>>>> 28c4324 (Render Deoro Wallet face from pass.json source.)
+- Ticket 2: [Scan the Deoro member QR at the counter](https://www.exponential.im/w/personal-cmgwt550/products/deoro/tickets/2)

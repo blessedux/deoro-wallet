@@ -12,6 +12,8 @@ PASS_DIR = ROOT / "pass" / "Deoro Loyalty.pass"
 PASS_JSON = PASS_DIR / "pass.json"
 PREVIEW = ROOT / "preview" / "index.html"
 QR_LIB = ROOT / "preview" / "vendor" / "qrcode.js"
+COUNTER = ROOT / "counter" / "index.html"
+COUNTER_LIB = ROOT / "counter" / "vendor" / "html5-qrcode.min.js"
 
 REQUIRED_IMAGES = [
     "icon.png",
@@ -102,6 +104,22 @@ def main() -> None:
         fail("preview must flip to back fields")
     if not QR_LIB.is_file():
         fail("missing preview/vendor/qrcode.js")
+
+    if COUNTER.is_file():
+        counter = COUNTER.read_text(encoding="utf-8")
+        if "pass.json" not in counter:
+            fail("counter must look up the same pass.json")
+        if "DEORO-" not in counter:
+            fail("counter must accept DEORO-<id> serials")
+        if "No member found" not in counter:
+            fail("counter must show a clear miss for unknown serials")
+        if "preview" not in counter:
+            fail("counter must document the preview QR as the happy path")
+        if "Start camera" not in counter or "paste-form" not in counter:
+            fail("counter must support camera or paste")
+        if not COUNTER_LIB.is_file() or COUNTER_LIB.stat().st_size < 1000:
+            fail("missing counter/vendor/html5-qrcode.min.js")
+        print("counter OK")
 
     print("pass source OK")
     print(f"  serial {pass_data['serialNumber']}")
