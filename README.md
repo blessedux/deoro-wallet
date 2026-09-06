@@ -6,30 +6,31 @@ PassKit source for Deoro. Tracked in Exponential product `deoro` (Mente Maestra 
 
 ## Live preview (Vercel)
 
-Import the GitHub repo into Vercel (same as the other Mentemaestra landings). `main` builds `dist/` (landing + preview + counter + pass source).
-
-After the first production deploy, the URLs look like:
+Import the GitHub repo into Vercel (same as the other Mentemaestra landings). `main` publishes the static preview plus `GET /api/pass?serial=DEORO-10001`.
 
 - Site: https://deoro-wallet.vercel.app/
 - Card: https://deoro-wallet.vercel.app/preview/
 - Counter: https://deoro-wallet.vercel.app/counter/
+- Add to Wallet: https://deoro-wallet.vercel.app/install/
 
 Import: https://vercel.com/new/blessedux/import?s=https://github.com/blessedux/deoro-wallet
 
-It is still not a signed `.pkpass`. Ticket 4 can add the install URL on this same Vercel project later.
+Without Ticket 5 secrets the install URL returns **503** and does **not** emit `application/vnd.apple.pkpass`. After certs exist, that same URL is the signed pass.
 
 ## Demo without an Apple Developer account
 
 ```bash
 python3 scripts/generate-pass-images.py
 python3 scripts/check-pass-source.py
-python3 scripts/build-preview-site.py
-python3 -m http.server 4173 --directory dist
+python3 scripts/test-issuer.py
+python3 scripts/serve.py
 ```
 
 1. Open the card: http://localhost:4173/preview/
 2. Open the counter: http://localhost:4173/counter/
 3. **Happy path:** hold the preview QR up to the counter camera, or paste `DEORO-10001`.
+4. Open http://localhost:4173/install/ — Add to Apple Wallet for `DEORO-10001`.
+5. `GET /api/pass?serial=DEORO-10001` errors clearly until signing certs are in the environment.
 
 The preview fetches `pass/Deoro Loyalty.pass/pass.json` and draws the Wallet face (front + flip-side back fields). The QR payload is the member serial (`DEORO-10001`). The counter looks up that serial against the same `pass.json` and shows name + stamps — or a clear miss for an unknown serial.
 
