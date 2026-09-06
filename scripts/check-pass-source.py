@@ -14,6 +14,8 @@ PREVIEW = ROOT / "preview" / "index.html"
 QR_LIB = ROOT / "preview" / "vendor" / "qrcode.js"
 COUNTER = ROOT / "counter" / "index.html"
 COUNTER_LIB = ROOT / "counter" / "vendor" / "html5-qrcode.min.js"
+LANDING = ROOT / "index.html"
+VERCEL = ROOT / "vercel.json"
 
 REQUIRED_IMAGES = [
     "icon.png",
@@ -120,6 +122,20 @@ def main() -> None:
         if not COUNTER_LIB.is_file() or COUNTER_LIB.stat().st_size < 1000:
             fail("missing counter/vendor/html5-qrcode.min.js")
         print("counter OK")
+
+    if LANDING.is_file():
+        landing = LANDING.read_text(encoding="utf-8")
+        if 'href="preview/"' not in landing or 'href="counter/"' not in landing:
+            fail("landing page must link to preview/ and counter/")
+        print("landing OK")
+
+    if VERCEL.is_file():
+        vercel = json.loads(VERCEL.read_text(encoding="utf-8"))
+        if vercel.get("outputDirectory") != "dist":
+            fail("vercel.json must publish dist/")
+        if "build-preview-site.py" not in str(vercel.get("buildCommand", "")):
+            fail("vercel.json must build the static preview")
+        print("vercel OK")
 
     print("pass source OK")
     print(f"  serial {pass_data['serialNumber']}")
