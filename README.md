@@ -4,12 +4,27 @@ PassKit source for Deoro. Tracked in Exponential product `deoro` (Mente Maestra 
 
 `pass/Deoro Loyalty.pass/` is the source of truth. The browser preview is that same `pass.json`. The counter reads the QR serial from that pass. Later signing wraps these files — it does not invent a second card UI.
 
+## Live preview (Vercel)
+
+Import the GitHub repo into Vercel (same as the other Mentemaestra landings). `main` builds `dist/` (landing + preview + counter + pass source).
+
+After the first production deploy, the URLs look like:
+
+- Site: https://deoro-wallet.vercel.app/
+- Card: https://deoro-wallet.vercel.app/preview/
+- Counter: https://deoro-wallet.vercel.app/counter/
+
+Import: https://vercel.com/new/blessedux/import?s=https://github.com/blessedux/deoro-wallet
+
+It is still not a signed `.pkpass`. Ticket 4 can add the install URL on this same Vercel project later.
+
 ## Demo without an Apple Developer account
 
 ```bash
 python3 scripts/generate-pass-images.py
 python3 scripts/check-pass-source.py
-python3 -m http.server 4173
+python3 scripts/build-preview-site.py
+python3 -m http.server 4173 --directory dist
 ```
 
 1. Open the card: http://localhost:4173/preview/

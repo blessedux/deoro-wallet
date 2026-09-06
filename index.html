@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deoro Wallet</title>
+    <style>
+      :root {
+        --bg: #1a120e;
+        --card: rgb(42, 28, 20);
+        --ink: rgb(245, 230, 196);
+        --label: rgb(212, 175, 106);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+        background: radial-gradient(circle at top, #3a2418, var(--bg));
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 16px 64px;
+      }
+      h1 { font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; opacity: 0.7; }
+      .lead { max-width: 420px; text-align: center; opacity: 0.75; line-height: 1.45; margin: 0 0 28px; }
+      .cards { display: grid; gap: 16px; width: min(420px, 100%); }
+      a.card {
+        display: block;
+        background: var(--card);
+        color: var(--ink);
+        text-decoration: none;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(212, 175, 106, 0.25);
+      }
+      .label { font-size: 10px; letter-spacing: 0.12em; color: var(--label); text-transform: uppercase; }
+      a.card h2 { margin: 8px 0 8px; font-size: 22px; }
+      a.card p { margin: 0; opacity: 0.75; font-size: 14px; line-height: 1.4; }
+      .note { max-width: 420px; margin-top: 28px; text-align: center; font-size: 12px; opacity: 0.6; line-height: 1.45; }
+    </style>
+  </head>
+  <body>
+    <h1>Deoro · Wallet demo</h1>
+    <p class="lead">
+      Browser preview of the Apple Wallet store card. Same <code>pass.json</code> the later
+      signed <code>.pkpass</code> will wrap. No Apple certificate required.
+    </p>
+    <div class="cards">
+      <a class="card" href="preview/">
+        <div class="label">Ticket 1</div>
+        <h2>Wallet preview</h2>
+        <p>Gold-on-espresso face, stamps, member serial, and a QR of <code>DEORO-10001</code>. Flip for hours and terms.</p>
+      </a>
+      <a class="card" href="counter/">
+        <div class="label">Ticket 2</div>
+        <h2>Counter scan</h2>
+        <p>Scan or paste that QR. Known members show name and stamps. Unknown serials miss clearly.</p>
+      </a>
+    </div>
+    <p class="note">
+      This is not a signed Wallet pass. iPhone Wallet will refuse a file until Pass Type ID
+      signing is wired. Demo member: <code>DEORO-10001</code>.
+    </p>
+  </body>
+</html>

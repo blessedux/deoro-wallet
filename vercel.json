@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "python3 scripts/build-preview-site.py",
+  "outputDirectory": "dist",
+  "installCommand": "echo skip",
+  "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/pass/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
