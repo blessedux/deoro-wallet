@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
-PUBLIC = ("index.html", "preview", "counter", "pass")
+PUBLIC = ("index.html", "preview", "counter", "pass", "install")
 
 
 def main() -> None:

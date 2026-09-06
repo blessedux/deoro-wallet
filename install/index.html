@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Deoro to Apple Wallet</title>
+    <style>
+      :root {
+        --bg: #1a120e;
+        --card: rgb(42, 28, 20);
+        --ink: rgb(245, 230, 196);
+        --label: rgb(212, 175, 106);
+        --miss: #ffb4a2;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+        background: radial-gradient(circle at top, #3a2418, var(--bg));
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 16px 64px;
+      }
+      h1 { font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; opacity: 0.7; }
+      .panel {
+        width: min(420px, 100%);
+        background: var(--card);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      }
+      .label { font-size: 10px; letter-spacing: 0.12em; color: var(--label); text-transform: uppercase; }
+      h2 { margin: 8px 0 12px; font-size: 24px; }
+      p { opacity: 0.8; line-height: 1.45; }
+      .kv { margin: 14px 0; }
+      .value { font-size: 20px; font-weight: 600; }
+      a.btn, button {
+        display: inline-block;
+        margin-top: 8px;
+        background: var(--label);
+        color: var(--card);
+        text-decoration: none;
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 20px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .note { margin-top: 18px; font-size: 13px; opacity: 0.7; }
+      .err { color: var(--miss); white-space: pre-wrap; font-size: 14px; }
+      .nav { margin-top: 22px; }
+      .nav a { color: var(--label); }
+    </style>
+  </head>
+  <body>
+    <h1>Deoro · Add to Apple Wallet</h1>
+    <div class="panel">
+      <div class="label">Demo member</div>
+      <h2 id="name">…</h2>
+      <div class="kv"><div class="label">Serial</div><div class="value" id="serial">DEORO-10001</div></div>
+      <div class="kv"><div class="label">Stamps</div><div class="value" id="stamps">…</div></div>
+      <a class="btn" id="add" href="/api/pass?serial=DEORO-10001">Add to Apple Wallet</a>
+      <p class="note">
+        This install URL is the Ticket 4 seam. On iPhone, a <em>signed</em>
+        <code>.pkpass</code> opens Wallet. Without Ticket 5 certificates the
+        server refuses a fake pass instead of handing Wallet an unsigned zip.
+      </p>
+      <p class="err" id="err" hidden></p>
+    </div>
+    <p class="nav">
+      <a href="../preview/">Wallet preview</a>
+      ·
+      <a href="../">Home</a>
+    </p>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const serial = (params.get("serial") || "DEORO-10001").toUpperCase();
+      document.getElementById("serial").textContent = serial;
+      document.getElementById("add").href = `/api/pass?serial=${encodeURIComponent(serial)}`;
+
+      fetch("../pass/Deoro%20Loyalty.pass/pass.json", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((pass) => {
+          const card = pass.storeCard || {};
+          const name = (card.auxiliaryFields || []).find((f) => f.key === "name");
+          const stamps = (card.primaryFields || []).find((f) => f.key === "stamps");
+          if (pass.serialNumber === serial) {
+            document.getElementById("name").textContent = name?.value || "Deoro member";
+            document.getElementById("stamps").textContent = stamps?.value || "—";
+          } else {
+            document.getElementById("name").textContent = serial;
+            document.getElementById("stamps").textContent = "Unknown on this demo seed";
+          }
+        })
+        .catch(() => {
+          document.getElementById("name").textContent = serial;
+        });
+    </script>
+  </body>
+</html>

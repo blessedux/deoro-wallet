@@ -1,10 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "python3 scripts/build-preview-site.py",
-  "outputDirectory": "dist",
+  "buildCommand": "python3 scripts/build-preview-site.py && rm -rf public && mv dist public",
   "installCommand": "echo skip",
-  "trailingSlash": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/pass.py": {
+      "includeFiles": "{issuer/**,pass/**}"
+    }
+  },
   "headers": [
     {
       "source": "/pass/(.*)",

@@ -127,12 +127,19 @@ def main() -> None:
         landing = LANDING.read_text(encoding="utf-8")
         if 'href="preview/"' not in landing or 'href="counter/"' not in landing:
             fail("landing page must link to preview/ and counter/")
+        if 'href="install/"' not in landing:
+            fail("landing page must link to the Add to Apple Wallet page")
         print("landing OK")
+
+    install = ROOT / "install" / "index.html"
+    if not install.is_file() or "Add to Apple Wallet" not in install.read_text(encoding="utf-8"):
+        fail("install/ must be the Add to Apple Wallet page")
+    if "/api/pass" not in install.read_text(encoding="utf-8"):
+        fail("install page must call the install URL")
+    print("install page OK")
 
     if VERCEL.is_file():
         vercel = json.loads(VERCEL.read_text(encoding="utf-8"))
-        if vercel.get("outputDirectory") != "dist":
-            fail("vercel.json must publish dist/")
         if "build-preview-site.py" not in str(vercel.get("buildCommand", "")):
             fail("vercel.json must build the static preview")
         print("vercel OK")
