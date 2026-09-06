@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Ticket 1 pass source + preview seam (no Apple certs required)."""
+"""Validate pass source, preview seam, and counter lookup (no Apple certs)."""
 
 from __future__ import annotations
 
