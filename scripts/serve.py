@@ -18,20 +18,31 @@ class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
-    def do_GET(self) -> None:
+    def _handle_pass(self, send_body: bool) -> bool:
         parsed = urlparse(self.path)
-        if parsed.path in ("/api/pass", "/api/pass/"):
-            serial = (parse_qs(parsed.query).get("serial") or [""])[0]
-            status, content_type, body, headers = issue_response(serial)
-            self.send_response(status)
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(body)))
-            for key, value in headers.items():
-                self.send_header(key, value)
-            self.end_headers()
+        if parsed.path not in ("/api/pass", "/api/pass/"):
+            return False
+        serial = (parse_qs(parsed.query).get("serial") or [""])[0]
+        status, content_type, body, headers = issue_response(serial)
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        for key, value in headers.items():
+            self.send_header(key, value)
+        self.end_headers()
+        if send_body:
             self.wfile.write(body)
+        return True
+
+    def do_GET(self) -> None:
+        if self._handle_pass(send_body=True):
             return
         super().do_GET()
+
+    def do_HEAD(self) -> None:
+        if self._handle_pass(send_body=False):
+            return
+        super().do_HEAD()
 
 
 def main() -> None:
