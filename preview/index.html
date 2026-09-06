@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deoro Wallet preview</title>
+    <script src="vendor/qrcode.js"></script>
+    <style>
+      :root {
+        --bg: #1a120e;
+        --card: rgb(42, 28, 20);
+        --ink: rgb(245, 230, 196);
+        --label: rgb(212, 175, 106);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+        background: radial-gradient(circle at top, #3a2418, var(--bg));
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px 64px;
+      }
+      h1 { font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; opacity: 0.7; }
+      .hint { max-width: 375px; text-align: center; font-size: 12px; opacity: 0.65; margin: 0 0 16px; }
+      .stage { perspective: 1200px; width: min(375px, 100%); }
+      .flip {
+        position: relative;
+        width: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease;
+      }
+      .stage.back .flip { transform: rotateY(180deg); }
+      .face {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        background: var(--card);
+      }
+      .back-face { position: absolute; inset: 0; transform: rotateY(180deg); padding: 20px 22px; overflow: auto; }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px 8px;
+      }
+      .brand { display: flex; align-items: center; gap: 10px; }
+      .brand img { height: 28px; }
+      .logo-text { font-weight: 700; letter-spacing: 0.2em; font-size: 15px; }
+      .header { text-align: right; }
+      .label { font-size: 10px; letter-spacing: 0.12em; color: var(--label); text-transform: uppercase; }
+      .value { font-size: 15px; font-weight: 600; }
+      .strip {
+        position: relative;
+        height: 144px;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 20px;
+      }
+      .strip .value { font-size: 42px; line-height: 1; }
+      .aux {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 14px 20px 8px;
+      }
+      .barcode {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 16px 20px;
+      }
+      .barcode img { width: 148px; height: 148px; background: #fff; border-radius: 8px; padding: 8px; }
+      .alt { margin-top: 8px; font-size: 12px; letter-spacing: 0.08em; opacity: 0.8; }
+      .back-face h2 { margin: 0 0 16px; font-size: 16px; }
+      .back-field { margin-bottom: 16px; }
+      .back-field .label { margin-bottom: 4px; display: block; }
+      button {
+        margin-top: 20px;
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--label);
+        border-radius: 999px;
+        padding: 10px 18px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .err { color: #ffb4a2; max-width: 420px; }
+    </style>
+  </head>
+  <body>
+    <h1>Deoro · Apple Wallet preview</h1>
+    <p class="hint">This face is rendered from <code>pass.json</code>. It is not a signed Wallet pass.</p>
+    <div class="stage" id="stage">
+      <div class="flip">
+        <article class="face" id="front"></article>
+        <article class="face back-face" id="back"></article>
+      </div>
+    </div>
+    <button type="button" id="flip">Flip card</button>
+    <p class="err" id="err" hidden></p>
+    <script>
+      const PASS_URL = "../pass/Deoro%20Loyalty.pass/pass.json";
+      const ASSET = (name) => `../pass/Deoro%20Loyalty.pass/${name}`;
+
+      function esc(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      const field = (f) => `
+        <div>
+          <div class="label">${esc(f.label)}</div>
+          <div class="value">${esc(f.value)}</div>
+        </div>`;
+
+      function qrDataUrl(message) {
+        const qr = qrcode(0, "M");
+        qr.addData(message, "Alphanumeric");
+        qr.make();
+        return qr.createDataURL(6, 8);
+      }
+
+      function render(pass) {
+        document.documentElement.style.setProperty("--card", pass.backgroundColor);
+        document.documentElement.style.setProperty("--ink", pass.foregroundColor);
+        document.documentElement.style.setProperty("--label", pass.labelColor);
+        const card = pass.storeCard;
+        if (!card) throw new Error("pass.json is missing storeCard.");
+        const headers = card.headerFields ?? [];
+        const primary = (card.primaryFields ?? [])[0];
+        const barcode = (pass.barcodes ?? [])[0];
+        if (!barcode?.message) throw new Error("pass.json is missing barcodes[0].message.");
+
+        document.getElementById("front").innerHTML = `
+          <div class="top">
+            <div class="brand">
+              <img src="${ASSET("logo@2x.png")}" alt="" />
+              <div class="logo-text">${esc(pass.logoText)}</div>
+            </div>
+            ${headers.map((h) => `<div class="header">${field(h)}</div>`).join("")}
+          </div>
+          <div class="strip" style="background-image:url('${ASSET("strip@2x.png")}')">
+            <div class="label">${esc(primary?.label)}</div>
+            <div class="value">${esc(primary?.value)}</div>
+          </div>
+          <div class="aux">${(card.auxiliaryFields ?? []).map(field).join("")}</div>
+          <div class="barcode">
+            <img src="${qrDataUrl(barcode.message)}" alt="${esc(barcode.altText || barcode.message)}" />
+            <div class="alt">${esc(barcode.altText || barcode.message)}</div>
+          </div>`;
+
+        document.getElementById("back").innerHTML = `
+          <h2>${esc(pass.organizationName)}</h2>
+          ${(card.backFields ?? [])
+            .map(
+              (f) => `<div class="back-field"><span class="label">${esc(f.label)}</span><div>${esc(f.value)}</div></div>`
+            )
+            .join("")}`;
+      }
+
+      const flipBtn = document.getElementById("flip");
+      flipBtn.addEventListener("click", () => {
+        const stage = document.getElementById("stage");
+        stage.classList.toggle("back");
+        flipBtn.textContent = stage.classList.contains("back") ? "Show front" : "Flip card";
+      });
+
+      fetch(`${PASS_URL}?t=${Date.now()}`, { cache: "no-store" })
+        .then((r) => {
+          if (!r.ok) throw new Error("Could not load pass.json — serve this folder over HTTP.");
+          return r.json();
+        })
+        .then(render)
+        .catch((e) => {
+          const el = document.getElementById("err");
+          el.hidden = false;
+          el.textContent = e.message;
+        });
+    </script>
+  </body>
+</html>

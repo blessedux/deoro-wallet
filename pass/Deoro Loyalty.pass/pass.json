@@ -1,0 +1,70 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.com.deoro.loyalty",
+  "teamIdentifier": "PENDING",
+  "serialNumber": "DEORO-10001",
+  "organizationName": "Deoro",
+  "description": "Deoro coffee loyalty card",
+  "logoText": "DEORO",
+  "foregroundColor": "rgb(245, 230, 196)",
+  "backgroundColor": "rgb(42, 28, 20)",
+  "labelColor": "rgb(212, 175, 106)",
+  "barcodes": [
+    {
+      "message": "DEORO-10001",
+      "format": "PKBarcodeFormatQR",
+      "messageEncoding": "iso-8859-1",
+      "altText": "DEORO-10001"
+    }
+  ],
+  "storeCard": {
+    "headerFields": [
+      {
+        "key": "member",
+        "label": "MEMBER",
+        "value": "10001"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "stamps",
+        "label": "STAMPS",
+        "value": "7 / 10"
+      }
+    ],
+    "auxiliaryFields": [
+      {
+        "key": "tier",
+        "label": "TIER",
+        "value": "Gold"
+      },
+      {
+        "key": "name",
+        "label": "NAME",
+        "value": "Alex Rivera"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "how",
+        "label": "How it works",
+        "value": "Collect 10 stamps, get a drink on us. One stamp per visit."
+      },
+      {
+        "key": "hours",
+        "label": "Hours",
+        "value": "Mon–Fri 7:00–18:00 · Sat–Sun 8:00–16:00"
+      },
+      {
+        "key": "terms",
+        "label": "Terms",
+        "value": "Stamps are per visit, not per drink. Free drink is any regular-size coffee. Deoro staff may ask for ID matching the name on this card."
+      },
+      {
+        "key": "contact",
+        "label": "Deoro",
+        "value": "hello@deoro.example"
+      }
+    ]
+  }
+}

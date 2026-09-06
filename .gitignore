@@ -1,0 +1,10 @@
+.DS_Store
+.secrets/
+.env
+.env.*
+*.p12
+*.pem
+*.cer
+*.key
+__pycache__/
+*.pkpass

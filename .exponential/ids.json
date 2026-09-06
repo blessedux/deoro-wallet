@@ -1,0 +1,39 @@
+{
+  "workspace": {
+    "name": "Mente Maestra Studio",
+    "slug": "personal-cmgwt550",
+    "id": "cmjzyn1b3001lrze706vmtgku"
+  },
+  "product": {
+    "name": "Deoro",
+    "slug": "deoro",
+    "id": "cmtq5x0ly0001ld04vqazjhcy"
+  },
+  "feature": {
+    "name": "Apple Wallet Fidelity Card",
+    "id": "cmtq5xa1y0003ld04dqo5q57s"
+  },
+  "page": {
+    "title": "PRD: Apple Wallet Fidelity Card",
+    "id": "cmtq5yijp000jld04o48r80as"
+  },
+  "scopes": {
+    "V1": "cmtq5ygq20007ld04cfw6xx45",
+    "V2": "cmtq5yhif000bld04gaqmp8xq",
+    "V3": "cmtq5yi4b000fld04ttada0az"
+  },
+  "repo": {
+    "host": "github.com",
+    "owner": "blessedux",
+    "name": "deoro-wallet",
+    "url": "https://github.com/blessedux/deoro-wallet"
+  },
+  "tickets": {
+    "1": "cmtq5zelm0013ld0414fgdea9",
+    "2": "cmtq5zgye0017ld049pl0riwk",
+    "3": "cmtq5zilb001bld04o3lfx8sb",
+    "4": "cmtq5zk31001fld0420ddyqcx",
+    "5": "cmtq5zlkg001jld04nxmpelo8",
+    "6": "cmtq5zn2p001nld042dskxory"
+  }
+}
