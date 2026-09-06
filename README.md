@@ -40,6 +40,26 @@ This is not a signed `.pkpass`. Wallet on a phone will refuse it until ticket 5 
 - Colors: espresso `rgb(42, 28, 20)`, cream `rgb(245, 230, 196)`, gold `rgb(212, 175, 106)`
 - Stamp rule (V1): one stamp per visit; 10 stamps = free regular coffee
 
+## Git flow
+
+Repo: [blessedux/deoro-wallet](https://github.com/blessedux/deoro-wallet)
+
+- `main` is the only integration branch. Do not commit ticket work straight to `main`.
+- One git branch per Exponential ticket. Use the ticket `branchName` (`deoro-N-…`).
+- Branch from the latest `main`. Merge that ticket to `main` before starting anything that depends on it.
+- One open PR per ticket. No stacked PRs.
+- After the PR exists, set the Exponential ticket to `QA` and `prUrl`.
+- Never commit Pass Type ID certificates or private keys.
+
+| Ticket | Branch |
+|---|---|
+| 1 Render Wallet face | `deoro-1-render-deoro-wallet-face-from-pass-source` |
+| 2 Counter QR scan | `deoro-2-scan-deoro-member-qr-at-the-counter` |
+| 3 Throwaway iPhone pass (HITL) | `deoro-3-throwaway-deoro-pass-on-real-iphone` |
+| 4 Install URL / pkpass | `deoro-4-issue-downloadable-pkpass-install-url` |
+| 5 Apple signing (HITL) | `deoro-5-wire-apple-pass-type-id-signing` |
+| 6 Live stamp updates | `deoro-6-update-stamps-on-installed-pass` |
+
 ## Exponential
 
 - Workspace: Mente Maestra Studio (`personal-cmgwt550`)
